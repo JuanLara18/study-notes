@@ -27,9 +27,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
+      - name: Configure Flask for GitHub Pages
+        run: |
+          # Create a configuration file for GitHub Pages deployment
+          echo "FREEZER_BASE_URL = 'https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/'" > app/config.py
+          echo "FREEZER_RELATIVE_URLS = False" >> app/config.py
+          echo "GITHUB_PAGES = True" >> app/config.py
+          
       - name: Build static site
         run: |
+          # Ensure build directory exists
+          mkdir -p build
+          # Generate static site
           flask --app app freeze
+          
+      - name: Post-process static files
+        run: |
+          # Fix asset paths in HTML files
+          find build -type f -name "*.html" -exec sed -i 's|href="/static/|href="static/|g' {} +
+          find build -type f -name "*.html" -exec sed -i 's|src="/static/|src="static/|g' {} +
+          find build -type f -name "*.html" -exec sed -i 's|href="/|href="./|g' {} +
+          # Create .nojekyll file to prevent GitHub Pages from processing with Jekyll
+          touch build/.nojekyll
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
