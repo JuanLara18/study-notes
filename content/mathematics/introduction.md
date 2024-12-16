@@ -1,18 +1,10 @@
 ---
-title: "Introducción a las Matemáticas"
+title: "Introduction to Mathematics"
 date: 2024-12-16
 category: mathematics
-tags: [introducción, conceptos básicos]
+tags: [basics, introduction]
 ---
 
-# Introducción a las Matemáticas
+# Introduction to Mathematics
 
-Las matemáticas son el lenguaje del universo...
-
-## Conceptos Básicos
-
-En esta sección exploraremos...
-
-## Ejemplos
-
-Aquí algunos ejemplos simples...
+Welcome to the mathematics section. Here we'll explore fundamental concepts...
