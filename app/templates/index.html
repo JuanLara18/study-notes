@@ -1,60 +1,114 @@
 {% extends "base.html" %}
 
-{% block title %}Study Notes - Home{% endblock %}
+{% block title %}Study Notes - Professional Learning Platform{% endblock %}
+
+{% block breadcrumbs %}
+<!-- Empty for home page -->
+{% endblock %}
 
 {% block content %}
 <div class="home-container">
-    <header class="home-header">
-        <h1>Study Notes</h1>
-        <p class="subtitle">A collection of academic notes on Mathematics, Computer Science, and Economics</p>
-    </header>
-
-    <section class="categories-section">
-        {% for category, notes in categories.items() %}
-        <div class="category-block">
-            <h2>{{ category|title }}</h2>
-            <div class="notes-grid">
-                {% for note in notes %}
-                <article class="note-card">
-                    <h3>
-                        <a href="{{ note.url }}">{{ note.metadata.title }}</a>
-                    </h3>
-                    <div class="note-metadata">
-                        <time datetime="{{ note.metadata.date }}">
-                            {{ note.metadata.date }}
-                        </time>
-                        {% if note.metadata.tags %}
-                        <div class="tags">
-                            {% for tag in note.metadata.tags %}
-                            <span class="tag">{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </article>
-                {% else %}
-                <p class="no-notes">No notes available in this category yet.</p>
-                {% endfor %}
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Enhance Your Academic Knowledge</h1>
+            <p class="hero-subtitle">Comprehensive study notes on Mathematics, Computer Science, and Economics</p>
+            <div class="hero-actions">
+                <a href="#categories" class="primary-button">Explore Categories</a>
+                <a href="#recent" class="secondary-button">Recent Notes</a>
             </div>
         </div>
-        {% endfor %}
+    </section>
+
+    <section id="categories" class="featured-categories">
+        <div class="section-header">
+            <h2>Knowledge Categories</h2>
+            <p class="section-description">Explore our carefully curated academic content</p>
+        </div>
+
+        <div class="categories-grid">
+            {% for category, notes in categories.items() %}
+            <div class="category-card">
+                <div class="category-header">
+                    <h3 class="category-title">{{ category|title }}</h3>
+                    <span class="notes-count">{{ notes|length }} notes</span>
+                </div>
+
+                <div class="category-content">
+                    {% for note in notes[:3] %}
+                    <article class="note-item">
+                        <div class="note-content">
+                            <h4 class="note-title">
+                                <a href="{{ note.url }}">{{ note.metadata.title }}</a>
+                            </h4>
+                            <div class="note-info">
+                                <time datetime="{{ note.metadata.date }}" class="note-date">
+                                    {{ note.metadata.date }}
+                                </time>
+                                {% if note.metadata.tags %}
+                                <div class="note-tags">
+                                    {% for tag in note.metadata.tags[:2] %}
+                                    <span class="tag">{{ tag }}</span>
+                                    {% endfor %}
+                                    {% if note.metadata.tags|length > 2 %}
+                                    <span class="tag-more">+{{ note.metadata.tags|length - 2 }}</span>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                    {% else %}
+                    <p class="empty-state">No notes available yet in this category.</p>
+                    {% endfor %}
+                </div>
+
+                {% if notes|length > 3 %}
+                <div class="category-footer">
+                    <a href="{{ url_for('category', category=category) }}" class="view-all">
+                        View all {{ notes|length }} notes
+                        <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
     </section>
 
     {% if recent_notes %}
-    <section class="recent-notes">
-        <h2>Recently Added</h2>
-        <div class="notes-grid">
+    <section id="recent" class="recent-section">
+        <div class="section-header">
+            <h2>Recently Added Notes</h2>
+            <p class="section-description">Stay up to date with our latest academic content</p>
+        </div>
+
+        <div class="recent-grid">
             {% for note in recent_notes %}
-            <article class="note-card">
-                <h3>
-                    <a href="{{ note.url }}">{{ note.metadata.title }}</a>
-                </h3>
-                <div class="note-metadata">
-                    <span class="category">{{ note.metadata.category|title }}</span>
-                    <time datetime="{{ note.metadata.date }}">
+            <article class="recent-card">
+                <div class="card-metadata">
+                    <span class="category-badge">{{ note.metadata.category|title }}</span>
+                    <time datetime="{{ note.metadata.date }}" class="publish-date">
                         {{ note.metadata.date }}
                     </time>
                 </div>
+                <h3 class="card-title">
+                    <a href="{{ note.url }}">{{ note.metadata.title }}</a>
+                </h3>
+                {% if note.metadata.tags %}
+                <div class="card-tags">
+                    {% for tag in note.metadata.tags %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <a href="{{ note.url }}" class="read-more">
+                    Read note
+                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"/>
+                    </svg>
+                </a>
             </article>
             {% endfor %}
         </div>
@@ -63,11 +117,16 @@
 
     {% if tags %}
     <section class="tags-section">
-        <h2>Browse by Tags</h2>
+        <div class="section-header">
+            <h2>Topic Tags</h2>
+            <p class="section-description">Browse notes by specific topics</p>
+        </div>
+
         <div class="tags-cloud">
-            {% for tag, count in tags.items() %}
-            <a href="{{ url_for('tag', tag=tag) }}" class="tag-link">
-                {{ tag }} ({{ count }})
+            {% for tag, count in tags.items()|sort(attribute='1', reverse=true) %}
+            <a href="{{ url_for('tag', tag=tag) }}" class="tag-chip">
+                <span class="tag-name">{{ tag }}</span>
+                <span class="tag-count">{{ count }}</span>
             </a>
             {% endfor %}
         </div>

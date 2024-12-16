@@ -3,48 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Study Notes{% endblock %}</title>
+    <meta name="description" content="Professional study notes on Mathematics, Computer Science, and Economics">
+    <meta name="theme-color" content="#2563eb">
+    
+    <title>{% block title %}Study Notes - Professional Learning Platform{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- KaTeX CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     
-    <!-- Estilos personalizados -->
+    <!-- Core CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
-    <!-- Pygments para resaltado de código -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pygments.css') }}">
     
-    <!-- KaTeX JavaScript -->
+    <!-- Scripts -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <script defer src="{{ url_for('static', filename='js/katex-config.js') }}"></script>
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="{{ url_for('index') }}" class="site-title">Study Notes</a>
-            <div class="nav-links">
-                {% for category in categories %}
-                <a href="{{ url_for('category', category=category) }}">{{ category|title }}</a>
-                {% endfor %}
-            </div>
-        </div>
-    </nav>
+    <header class="site-header">
+        <nav class="main-nav">
+            <div class="nav-container">
+                <div class="nav-left">
+                    <a href="{{ url_for('index') }}" class="site-logo">
+                        <span class="site-title">Study Notes</span>
+                    </a>
+                </div>
 
-    <main class="content">
-        {% block content %}{% endblock %}
+                <div class="nav-center">
+                    <div class="search-bar">
+                        <input type="search" placeholder="Search notes..." aria-label="Search notes">
+                        <button type="submit" aria-label="Submit search">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="nav-right">
+                    <div class="category-menu">
+                        {% for category in categories %}
+                        <a href="{{ url_for('category', category=category) }}" class="category-link">
+                            {{ category|title }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    
+                    <button class="theme-toggle" aria-label="Toggle dark mode">
+                        <svg class="sun-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="breadcrumbs">
+        <div class="container">
+            <a href="{{ url_for('index') }}">Home</a>
+            {% block breadcrumbs %}{% endblock %}
+        </div>
+    </div>
+
+    <main class="site-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; {{ current_year }} Study Notes. Built with Flask.</p>
-            {% if config.GITHUB_REPO %}
-            <p>
-                <a href="{{ config.GITHUB_REPO }}" target="_blank" rel="noopener noreferrer">
-                    View on GitHub
-                </a>
-            </p>
-            {% endif %}
+    <footer class="site-footer">
+        <div class="footer-content container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Study Notes</h3>
+                    <p>Professional learning platform for Mathematics, Computer Science, and Economics.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        {% for category in categories %}
+                        <li><a href="{{ url_for('category', category=category) }}">{{ category|title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link">Latest Notes</a></li>
+                        <li><a href="#" class="footer-link">Popular Topics</a></li>
+                        {% if config.GITHUB_REPO %}
+                        <li><a href="{{ config.GITHUB_REPO }}" target="_blank" rel="noopener noreferrer">View on GitHub</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; {{ current_year }} Study Notes. All rights reserved.</p>
+                <p>Built with Flask</p>
+            </div>
         </div>
     </footer>
 </body>
