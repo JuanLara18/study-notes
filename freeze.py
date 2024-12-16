@@ -1,4 +1,4 @@
-from app.generator import app, freezer
+from app import app, freezer  # Import from app package directly
 import sys
 
 if __name__ == '__main__':
