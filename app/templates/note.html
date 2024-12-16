@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ note.metadata.title }} - Study Notes{% endblock %}
+
+{% block content %}
+<article class="note-container">
+    <header class="note-header">
+        <div class="metadata">
+            <div class="category-label">
+                <a href="{{ url_for('category', category=note.metadata.category) }}">
+                    {{ note.metadata.category|title }}
+                </a>
+            </div>
+            <h1>{{ note.metadata.title }}</h1>
+            <div class="note-meta">
+                <time datetime="{{ note.metadata.date }}">
+                    {{ note.metadata.date }}
+                </time>
+                {% if note.metadata.tags %}
+                <div class="tags">
+                    {% for tag in note.metadata.tags %}
+                    <a href="{{ url_for('tag', tag=tag) }}" class="tag">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="note-content">
+        {{ note.content|safe }}
+    </div>
+
+    <footer class="note-footer">
+        {% if note.metadata.author %}
+        <div class="author-info">
+            <p>Written by {{ note.metadata.author }}</p>
+        </div>
+        {% endif %}
+
+        {% if related_notes %}
+        <div class="related-notes">
+            <h2>Related Notes</h2>
+            <div class="notes-grid">
+                {% for related in related_notes %}
+                <article class="note-card">
+                    <h3>
+                        <a href="{{ related.url }}">{{ related.metadata.title }}</a>
+                    </h3>
+                    <div class="note-metadata">
+                        <span class="category">{{ related.metadata.category|title }}</span>
+                        <time datetime="{{ related.metadata.date }}">
+                            {{ related.metadata.date }}
+                        </time>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <nav class="note-navigation">
+            {% if prev_note %}
+            <a href="{{ prev_note.url }}" class="prev-note">
+                <span class="nav-label">Previous</span>
+                <span class="nav-title">{{ prev_note.metadata.title }}</span>
+            </a>
+            {% endif %}
+            
+            {% if next_note %}
+            <a href="{{ next_note.url }}" class="next-note">
+                <span class="nav-label">Next</span>
+                <span class="nav-title">{{ next_note.metadata.title }}</span>
+            </a>
+            {% endif %}
+        </nav>
+    </footer>
+</article>
+
+{% if config.ENABLE_COMMENTS %}
+<section class="comments-section">
+    <h2>Comments</h2>
+    <div id="comments">
+        <!-- Sistema de comentarios será integrado aquí -->
+    </div>
+</section>
+{% endif %}
+{% endblock %}

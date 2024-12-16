@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Study Notes - Home{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <header class="home-header">
+        <h1>Study Notes</h1>
+        <p class="subtitle">A collection of academic notes on Mathematics, Computer Science, and Economics</p>
+    </header>
+
+    <section class="categories-section">
+        {% for category, notes in categories.items() %}
+        <div class="category-block">
+            <h2>{{ category|title }}</h2>
+            <div class="notes-grid">
+                {% for note in notes %}
+                <article class="note-card">
+                    <h3>
+                        <a href="{{ note.url }}">{{ note.metadata.title }}</a>
+                    </h3>
+                    <div class="note-metadata">
+                        <time datetime="{{ note.metadata.date }}">
+                            {{ note.metadata.date }}
+                        </time>
+                        {% if note.metadata.tags %}
+                        <div class="tags">
+                            {% for tag in note.metadata.tags %}
+                            <span class="tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </article>
+                {% else %}
+                <p class="no-notes">No notes available in this category yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+
+    {% if recent_notes %}
+    <section class="recent-notes">
+        <h2>Recently Added</h2>
+        <div class="notes-grid">
+            {% for note in recent_notes %}
+            <article class="note-card">
+                <h3>
+                    <a href="{{ note.url }}">{{ note.metadata.title }}</a>
+                </h3>
+                <div class="note-metadata">
+                    <span class="category">{{ note.metadata.category|title }}</span>
+                    <time datetime="{{ note.metadata.date }}">
+                        {{ note.metadata.date }}
+                    </time>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if tags %}
+    <section class="tags-section">
+        <h2>Browse by Tags</h2>
+        <div class="tags-cloud">
+            {% for tag, count in tags.items() %}
+            <a href="{{ url_for('tag', tag=tag) }}" class="tag-link">
+                {{ tag }} ({{ count }})
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

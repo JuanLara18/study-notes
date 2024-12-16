@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Study Notes{% endblock %}</title>
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Pygments para resaltado de código -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pygments.css') }}">
+    
+    <!-- KaTeX JavaScript -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script defer src="{{ url_for('static', filename='js/katex-config.js') }}"></script>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="site-title">Study Notes</a>
+            <div class="nav-links">
+                {% for category in categories %}
+                <a href="{{ url_for('category', category=category) }}">{{ category|title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; {{ current_year }} Study Notes. Built with Flask.</p>
+            {% if config.GITHUB_REPO %}
+            <p>
+                <a href="{{ config.GITHUB_REPO }}" target="_blank" rel="noopener noreferrer">
+                    View on GitHub
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </footer>
+</body>
+</html>
