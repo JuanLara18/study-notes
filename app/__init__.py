@@ -190,6 +190,10 @@ def create_app(test_config=None):
         """Generate URLs for freezing tag pages."""
         for tag in note_generator.get_tags():
             yield 'tag', {'tag': tag}
+            
+    @freezer.register_generator
+    def favicon_url_generator():
+        yield 'favicon', {}
 
     return app, freezer
 
