@@ -2,29 +2,14 @@
 
 {% block content %}
 <div class="home-container">
-    <section class="featured-categories">
-        <div class="categories-grid">
-            {% for category, notes in categories.items() %}
-            <div class="category-card">
-                <div class="category-header">
-                    <h3 class="category-title">{{ category|title }}</h3>
-                    <span class="notes-count">{{ notes|length }} notes</span>
-                </div>
-                <div class="category-content">
-                    {% for note in notes[:3] %}
-                    <article class="note-item">
-                        <h4 class="note-title">
-                            <a href="{{ note.url }}">{{ note.metadata.title }}</a>
-                        </h4>
-                        <time datetime="{{ note.metadata.date }}" class="note-date">
-                            {{ note.metadata.date }}
-                        </time>
-                    </article>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
+    <div class="notes-list">
+        {% for note in notes %}
+        <article class="note-item">
+            <h2 class="note-title">{{ note.metadata.title }}</h2>
+            <time datetime="{{ note.metadata.date }}">{{ note.metadata.date }}</time>
+            {{ note.content|safe }}
+        </article>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
