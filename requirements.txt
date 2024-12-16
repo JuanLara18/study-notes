@@ -1,0 +1,6 @@
+Flask==3.0.0
+Frozen-Flask==1.0.1
+Markdown==3.5.1
+PyYAML==6.0.1
+python-frontmatter==1.0.0
+Pygments==2.17.2
